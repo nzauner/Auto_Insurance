@@ -5,14 +5,28 @@
 # 
 # ## Exploratory Data Analysis
 
+# ## Project Goals
+# 
+# - Analyze auto insurance data.
+# - Build a logistic regression model to predict crash probability for auto insurance customers.
+# - Build a linear regression model to predict crash cost for auto insurance customers.
+# - Use model results to develop crash percentage and assign customers to new risk profiles.
+# - Determine cost of premiums based on risk profiles.
+
+# ## Summary of Data
+# 
+# The dataset for this project contains 6044 records of auto insurance data. Each record
+# represents a customer at an auto insurance company. Using this data, we will be able to ascertain what
+# influences the likelihood of a car crash. Then subsequently, we will be able to determine the cost to resolve a claim. The data in this project is the typical type of corporate data you would receive from a company in the insurance field-- a typical flat file from client records.
+
 # ### Library Import
 
 # In[ ]:
 
 
 #Import libraries
-get_ipython().run_line_magic('run', '../python_files/imports')
-
+# get_ipython().run_line_magic('run', '../python_files/imports')
+from imports import *
 
 # ## Data Import and Data Examination
 
@@ -26,7 +40,7 @@ auto_df = pd.read_csv('../data/auto_insurance_data.csv')
 auto_df.columns = [i.lower() for i in auto_df.columns]
 
 # quick overview of the dataset
-auto_df
+# auto_df
 
 
 # After a quick overview of the dataset, we see that we are working with 6043 total observations and 25 different variables. The response variable we will be using is Crash, which indicates whether a car was in a crash or not. The remaining 24 variables will be used as explanatory variables. We also notice a good mix of continuous and categorical variables.
@@ -35,7 +49,7 @@ auto_df
 
 
 # quick review of the variables in the dataset
-auto_df.info()
+# auto_df.info()
 
 
 # For modeling purposes, we know that we will have to convert all categorical variables to dummy variables. As we can see above, there are 10 categorical variables that will need to go through this conversion.
@@ -44,7 +58,7 @@ auto_df.info()
 
 
 # quick review of the characteristics of our current continuous variables in the dataset
-auto_df.describe()
+# auto_df.describe()
 
 
 # We notice above that there is a large range between some of our observations. However, it is not appropriate to dismiss these as outliers, as we do not want to skew or create bias within our dataset. Also, above we cannot view the descriptions of our 10 categorical variables until we convert them to continous variables.
@@ -53,7 +67,7 @@ auto_df.describe()
 
 
 # check the number of NaN values in the dataset
-auto_df.isna().sum()
+# auto_df.isna().sum()
 
 
 # Fortunately, we see above that our dataset does not contain any missing values, so we will not need to worry about imputation.
@@ -99,7 +113,7 @@ log_col(auto_df, 'travtime')
 
 # quick review of the characteristics of all variables in the dataset, 
 # including the new dummy variables and log-transformed variables
-auto_df.describe()
+# auto_df.describe()
 
 
 # ## Initial Train and Test Dataset Creation
@@ -139,15 +153,15 @@ mask = np.zeros_like(x_train_log.corr())
 triangle_indices = np.triu_indices_from(mask)
 mask[triangle_indices] = True
 
-plt.figure(figsize=(35,30))
-ax = sns.heatmap(x_train_log.corr(method='pearson'), cmap="coolwarm", mask=mask, annot=True, annot_kws={"size": 18}, square=True, linewidths=4)
-sns.set_style('white')
-plt.xticks(fontsize=14, rotation=45)
-plt.yticks(fontsize=14, rotation=0)
-bottom, top = ax.get_ylim()
-ax.set_ylim(bottom + 0.5, top - 0.5)
+# plt.figure(figsize=(35,30))
+# ax = sns.heatmap(x_train_log.corr(method='pearson'), cmap="coolwarm", mask=mask, annot=True, annot_kws={"size": 18}, square=True, linewidths=4)
+# sns.set_style('white')
+# plt.xticks(fontsize=14, rotation=45)
+# plt.yticks(fontsize=14, rotation=0)
+# bottom, top = ax.get_ylim()
+# ax.set_ylim(bottom + 0.5, top - 0.5)
 #plt.ylabel(ylabel=' ', labelpad=100)
-plt.show()
+# plt.show()
 
 
 # In[ ]:
@@ -166,15 +180,15 @@ mask = np.zeros_like(x_train_lin.corr())
 triangle_indices = np.triu_indices_from(mask)
 mask[triangle_indices] = True
 
-plt.figure(figsize=(35,30))
-ax = sns.heatmap(x_train_lin.corr(method='pearson'), cmap="coolwarm", mask=mask, annot=True, annot_kws={"size": 18}, square=True, linewidths=4)
-sns.set_style('white')
-plt.xticks(fontsize=14, rotation=45)
-plt.yticks(fontsize=14, rotation=0)
-bottom, top = ax.get_ylim()
-ax.set_ylim(bottom + 0.5, top - 0.5)
+# plt.figure(figsize=(35,30))
+# ax = sns.heatmap(x_train_lin.corr(method='pearson'), cmap="coolwarm", mask=mask, annot=True, annot_kws={"size": 18}, square=True, linewidths=4)
+# sns.set_style('white')
+# plt.xticks(fontsize=14, rotation=45)
+# plt.yticks(fontsize=14, rotation=0)
+# bottom, top = ax.get_ylim()
+# ax.set_ylim(bottom + 0.5, top - 0.5)
 #plt.ylabel(ylabel=' ', labelpad=100)
-plt.show()
+# plt.show()
 
 
 # ## Feature Selection
@@ -198,7 +212,7 @@ for key,value in enumerate(feature_importance_log):
     if(value[1]) == True:
         new_features_log.append(value[0])
         
-print(new_features_log)
+# print(new_features_log)
 
 
 # ### Recursive Feature Elimination for Simple Linear Regression Model
@@ -240,8 +254,8 @@ x_test_lin = x_test_lin[new_features_lin]
 # In[ ]:
 
 
-print(x_train_log.shape)
-print(x_test_log.shape)
-print(x_train_lin.shape)
-print(x_test_lin.shape)
+# print(x_train_log.shape)
+# print(x_test_log.shape)
+# print(x_train_lin.shape)
+# print(x_test_lin.shape)
 

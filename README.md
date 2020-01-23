@@ -19,7 +19,7 @@
 
 ## Summary of Data:
 
-The dataset for this project contains 6043 records of auto insurance data. Each record
+The dataset for this project contains 6044 records of auto insurance data. Each record
 represents a customer at an auto insurance company. Using this data, we will be able to ascertain what
 influences the likelihood of a car crash. Then subsequently, we will be able to determine the cost to resolve a claim. The data in this project is the typical type of corporate data you would receive from a company in the insurance field-- a typical flat file from client records.
 
