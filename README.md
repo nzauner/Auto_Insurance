@@ -33,7 +33,8 @@ influences the likelihood of a car crash. Then subsequently, we will be able to 
 
 **Slide Deck:**
 <br>
-[Presentation Slides](https://github.com/nzauner/Auto_Insurance/tree/master/presentation)
+[Presentation Slides](https://prezi.com/view/1bE0LMc8xoJqwupO7EOy/)
+[Presentation PDF](https://github.com/nzauner/Auto_Insurance/tree/master/presentation)
 
 **Data Folder (all downloaded data and modified datasets used in our notebooks):**
 <br>
