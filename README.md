@@ -9,13 +9,19 @@
 <br>
 [Nick Zauner](https://github.com/nzauner)
 
-## Project Goal:
+## Project Goals:
 
-
+- Analyze auto insurance data.
+- Build a logistic regression model to predict crash probability for auto insurance customers.
+- Build a linear regression model to predict crash cost for auto insurance customers.
+- Use model results to develop crash percentage and assign customers to new risk profiles.
+- Determine cost of premiums based on risk profiles.
 
 ## Summary of Data:
 
-
+The dataset for this project contains 6043 records of auto insurance data. Each record
+represents a customer at an auto insurance company. Using this data, we will be able to ascertain what
+influences the likelihood of a car crash. Then subsequently, we will be able to determine the cost to resolve a claim. The data in this project is the typical type of corporate data you would receive from a company in the insurance field-- a typical flat file from client records.
 
 ## Summary of Files:
 
@@ -27,7 +33,7 @@
 
 **Slide Deck:**
 <br>
-[Presentation Slides]
+[Presentation Slides](https://github.com/nzauner/Auto_Insurance/tree/master/presentation)
 
 **Data Folder (all downloaded data and modified datasets used in our notebooks):**
 <br>
