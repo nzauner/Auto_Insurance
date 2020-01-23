@@ -22,6 +22,7 @@ from sklearn.datasets import make_regression
 from sklearn import datasets, linear_model
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
+from sklearn.linear_model import Ridge
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -29,3 +30,6 @@ pd.options.display.max_columns = None
 
 import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+from yellowbrick.datasets import load_concrete
+from yellowbrick.regressor import ResidualsPlot
