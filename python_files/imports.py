@@ -33,3 +33,5 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 from yellowbrick.datasets import load_concrete
 from yellowbrick.regressor import ResidualsPlot
+
+from IPython import get_ipython
