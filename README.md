@@ -14,8 +14,8 @@
 - Analyze auto insurance data.
 - Build a logistic regression model to predict crash probability for auto insurance customers.
 - Build a linear regression model to predict crash cost for auto insurance customers.
-- Use model results to develop crash percentage and assign customers to new risk profiles.
-- Determine cost of premiums based on risk profiles.
+- Use model results to develop crash percentage, assign customers to new risk profiles, and risk probability percentages.
+- Determine cost of premiums based on customer risk profiles and risk probability percentages.
 
 ## Summary of Data:
 
@@ -31,9 +31,9 @@ influences the likelihood of a car crash. Then subsequently, we will be able to 
 <br>
 [Technical Notebook](https://github.com/nzauner/Auto_Insurance/blob/master/notebooks/auto_insurance_technical_notebook.ipynb)
 
-**Slide Deck:**
+**Presentation:**
 <br>
-[Presentation Slides](https://prezi.com/view/1bE0LMc8xoJqwupO7EOy/)
+[Presentation Slide Deck](https://prezi.com/view/1bE0LMc8xoJqwupO7EOy/)
 
 
 **Data Folder (all downloaded data and modified datasets used in our notebooks):**
