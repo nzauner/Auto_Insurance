@@ -53,3 +53,12 @@ def heat_map(filepfx):
     #plt.ylabel(ylabel=' ', labelpad=100)
     plt.show()
     fig.savefig(f'../images/{filepfx}_heat_map.png', transparent=True, dpi=2000, bbox_inches='tight')
+    
+    
+    
+# l = auto_df['CRASH_COST'].quantile(0.2)
+# ml = auto_df['CRASH_COST'].quantile(0.2)
+# m = auto_df['CRASH_COST'].quantile(0.2)
+# mh = auto_df['CRASH_COST'].quantile(0.2)
+# h = auto_df['CRASH_COST'].quantile(0.2)
+# data_1 = auto_df[auto_df['CRASH_COST']<l]
