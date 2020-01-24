@@ -10,12 +10,12 @@
 # - Analyze auto insurance data.
 # - Build a logistic regression model to predict crash probability for auto insurance customers.
 # - Build a linear regression model to predict crash cost for auto insurance customers.
-# - Use model results to develop crash percentage and assign customers to new risk profiles.
-# - Determine cost of premiums based on risk profiles.
+# - Use model results to develop crash percentage, assign customers to new risk profiles, and risk probability percentages.
+# - Determine cost of premiums based on customer risk profiles and risk probability percentages.
 
 # ## Summary of Data
 # 
-# The dataset for this project contains 6044 records of auto insurance data. Each record
+# The dataset for this project contains 6043 records of auto insurance data. Each record
 # represents a customer at an auto insurance company. Using this data, we will be able to ascertain what
 # influences the likelihood of a car crash. Then subsequently, we will be able to determine the cost to resolve a claim. The data in this project is the typical type of corporate data you would receive from a company in the insurance field-- a typical flat file from client records.
 
@@ -43,7 +43,7 @@ auto_df.columns = [i.lower() for i in auto_df.columns]
 # auto_df
 
 
-# After a quick overview of the dataset, we see that we are working with 6043 total observations and 25 different variables. The response variable we will be using is Crash, which indicates whether a car was in a crash or not. The remaining 24 variables will be used as explanatory variables. We also notice a good mix of continuous and categorical variables.
+# After a quick overview of the dataset, we see that we are working with 6044 total observations and 25 different variables. The response variable we will be using is 'crash', which indicates whether a car was in a crash or not. The remaining 24 variables will be used as explanatory variables. We also notice a good mix of continuous and categorical variables.
 
 # In[ ]:
 
@@ -72,7 +72,9 @@ auto_df.columns = [i.lower() for i in auto_df.columns]
 
 # Fortunately, we see above that our dataset does not contain any missing values, so we will not need to worry about imputation.
 
-# ## Data Cleaning and Data Transformations
+# ## Data Cleaning, Data Transformations, and Data Exploration
+# 
+# Below, we created dummy variables for our 10 categorical variables: mstatus, sex, parent1, red_car, revoked, urbanicity, education, job, car_use, and car_type. Using the mapping technique, these changes were appended to the dataset, and therefore, we did not have to drop any variables.
 
 # In[ ]:
 
@@ -91,10 +93,12 @@ auto_df['car_use'] = auto_df['car_use'].map({'Commercial': 1, 'Private': 0})
 auto_df['car_type'] = auto_df['car_type'].map({'Sports Car': 1, 'SUV': 1, 'Minivan': 1, 'Pickup': 0, 'Van': 0, 'Panel Truck': 0})
 
 
+# Next, we created log-transformed variables for our continuous variables that did not have normal distributions. Then, we dropped the original variables (the pre-transformed variables) from out dataset. This was performed on 3 of our feature variables: tif, bluebook, and travtime.
+
 # In[ ]:
 
 
-# Log Transformations for non-normalized variables. Drop the original variable from the dataset.
+# Log Transformations for non-normalized variables. Then, drop the original variable from the dataset.
 
 def log_col(df, col):
     '''Convert column to log values and
@@ -116,7 +120,39 @@ log_col(auto_df, 'travtime')
 # auto_df.describe()
 
 
+# Our auto_df dataset is now ready for further evaluation. Above, we observe the newly edited variables from our dummy transformations and log-transformations. This leaves us with the same number of total observations and variable columns: 6044 observations and 25 variables (crash and crash_cost are our 2 response variables, and the remaining 23 variables are our feature variables).
+# <p>
+# Below, we explore the correlations between our response variables and feature variables. The correlation heatmap does a great job in providing a visual understanding of these relationships.
+
+# In[ ]:
+
+
+# Correlations between all variables in auto_df dataset
+# auto_df.corr(method = 'pearson')
+
+
+# In[ ]:
+
+
+#Correlation Heatmap of all variables in auto_df dataset
+
+# mask = np.zeros_like(auto_df.corr())
+# triangle_indices = np.triu_indices_from(mask)
+# mask[triangle_indices] = True
+
+# plt.figure(figsize=(35,30))
+# ax = sns.heatmap(auto_df.corr(method='pearson'), cmap="coolwarm", mask=mask, annot=True, annot_kws={"size": 18}, square=True, linewidths=4)
+# sns.set_style('white')
+# plt.xticks(fontsize=14, rotation=45)
+# plt.yticks(fontsize=14, rotation=0)
+# bottom, top = ax.get_ylim()
+# ax.set_ylim(bottom + 0.5, top - 0.5)
+# # plt.show()
+
+
 # ## Initial Train and Test Dataset Creation
+# 
+# In this section, we split the auto_df dataset into training and test datasets for modeling purposes, both for our logistic regression model and our simple linear regression model. We used an 80%/20% training and test split, and randomized the selection of the data pulled from the original dataset.
 
 # In[ ]:
 
@@ -135,63 +171,9 @@ crash_cost = auto_df['crash_cost']
 x_train_lin, x_test_lin, y_train_lin, y_test_lin = train_test_split(features, crash_cost, test_size = 0.2, random_state = 10)
 
 
-# ## Data Exploration
-
-# In[ ]:
-
-
-# Correlations for logistic regression model
-x_train_log.corr(method = 'pearson')
-
-
-# In[ ]:
-
-
-#Correlation Heatmap for logistic regression model
-
-mask = np.zeros_like(x_train_log.corr())
-triangle_indices = np.triu_indices_from(mask)
-mask[triangle_indices] = True
-
-# plt.figure(figsize=(35,30))
-# ax = sns.heatmap(x_train_log.corr(method='pearson'), cmap="coolwarm", mask=mask, annot=True, annot_kws={"size": 18}, square=True, linewidths=4)
-# sns.set_style('white')
-# plt.xticks(fontsize=14, rotation=45)
-# plt.yticks(fontsize=14, rotation=0)
-# bottom, top = ax.get_ylim()
-# ax.set_ylim(bottom + 0.5, top - 0.5)
-#plt.ylabel(ylabel=' ', labelpad=100)
-# plt.show()
-
-
-# In[ ]:
-
-
-# Correlations for simple linear regression model
-x_train_lin.corr(method = 'pearson')
-
-
-# In[ ]:
-
-
-#Correlation Heatmap for simple linear regression model
-
-mask = np.zeros_like(x_train_lin.corr())
-triangle_indices = np.triu_indices_from(mask)
-mask[triangle_indices] = True
-
-# plt.figure(figsize=(35,30))
-# ax = sns.heatmap(x_train_lin.corr(method='pearson'), cmap="coolwarm", mask=mask, annot=True, annot_kws={"size": 18}, square=True, linewidths=4)
-# sns.set_style('white')
-# plt.xticks(fontsize=14, rotation=45)
-# plt.yticks(fontsize=14, rotation=0)
-# bottom, top = ax.get_ylim()
-# ax.set_ylim(bottom + 0.5, top - 0.5)
-#plt.ylabel(ylabel=' ', labelpad=100)
-# plt.show()
-
-
 # ## Feature Selection
+# 
+# For modeling purposes, we used recursive feature elimination for both our logistic regression model and our simple linear regression model. This process uses cross-validation techniques, using accuracy as a metric, to eliminate variables that may hurt our model performance. Those variables get dropped from the dataset prior to modeling.
 
 # ### Recursive Feature Elimination for Logistic Regression Model
 
@@ -234,10 +216,12 @@ for key,value in enumerate(feature_importance_lin):
     if(value[1]) == True:
         new_features_lin.append(value[0])
         
-print(new_features_lin)
+# print(new_features_lin)
 
 
 # ## Final Train and Test Datasets after Feature Selection
+# 
+# Here, we create our final training and test datasets that will be used for our modeling process. After reviewing the structure of each dataset for both of our models, we notice that our recursive feature elimination process removed 7 features for our logistic regression model data, giving us 16 features for this model. However, this process did not remove any features for our simple linear regrssion model data, leaving us with all 23 features for this model. Now, with our cleaned final datasets, we are ready to move onto the modeling phase of our study.
 
 # In[ ]:
 
