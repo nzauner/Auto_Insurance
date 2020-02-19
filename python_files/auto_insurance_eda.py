@@ -15,7 +15,7 @@
 
 # ## Summary of Data
 # 
-# The dataset for this project contains 6043 records of auto insurance data. Each record
+# The dataset for this project contains 6044 records of auto insurance data. Each record
 # represents a customer at an auto insurance company. Using this data, we will be able to ascertain what
 # influences the likelihood of a car crash. Then subsequently, we will be able to determine the cost to resolve a claim. The data in this project is the typical type of corporate data you would receive from a company in the insurance field-- a typical flat file from client records.
 
@@ -147,28 +147,34 @@ log_col(auto_df, 'travtime')
 # plt.yticks(fontsize=14, rotation=0)
 # bottom, top = ax.get_ylim()
 # ax.set_ylim(bottom + 0.5, top - 0.5)
-# # plt.show()
+# plt.show()
 
 
 # ## Initial Train and Test Dataset Creation
 # 
-# In this section, we split the auto_df dataset into training and test datasets for modeling purposes, both for our logistic regression model and our simple linear regression model. We used an 80%/20% training and test split, and randomized the selection of the data pulled from the original dataset.
+# In this section, we split the auto_df dataset into training and test datasets for modeling purposes, both for our logistic regression model and our simple linear regression model. We used an 80%-20% training and test split, and randomized the selection of the data pulled from the original dataset.
+# 
+# For our linear regression model, we did have to alter which data we were using because of our response variable crash_cost. Since crash_cost only gives us crash amounts for customers who DID get in accidents this past year, we must filter out the customers who did NOT get into car accidents this year. We can use this model to predict crash amounts for those who did get in a crash and might get into another accident. For the customers who have not been involved in an accident, we are not suggesting that it is impossible for them to get into a future accident. For those customers specifically, if they do get into a future accident, we can plug in their associated crash cost into our already established crash_cost model and then use that data to predict their future accident costs based on our feature variables. Since we do not have an associated crash_cost for these specific customers yet though, we cannot use them inside of this specific model. We can only add them to our model once they do in fact get into a crash (hopefully they don't!).
 
 # In[ ]:
 
 
 #Split auto_insurance_df into train and test datasets for our logistic and linear regression models
 
-#'features' will be used in both models
-features = auto_df.drop(['crash', 'crash_cost'], axis = 1)
-
 #train and test datasets for logistic regression model
 crash = auto_df['crash']
-x_train_log, x_test_log, y_train_log, y_test_log = train_test_split(features, crash, test_size = 0.2, random_state = 10)
+features_log = auto_df.drop(['crash', 'crash_cost'], axis = 1)
+x_train_log, x_test_log, y_train_log, y_test_log = train_test_split(features_log, crash, test_size = 0.2, random_state = 10)
+
+#for our simple linear regression model, filter out customers who did NOT get into an accident this year, and create
+# new dataframe consisting of only customers who DID get into an accident this year
+customers_no_crash = auto_df[auto_df['crash'] == 0 ].index
+auto_df.drop(customers_no_crash, inplace=True)
 
 #train and test datasets for simple linear regression model
 crash_cost = auto_df['crash_cost']
-x_train_lin, x_test_lin, y_train_lin, y_test_lin = train_test_split(features, crash_cost, test_size = 0.2, random_state = 10)
+features_lin = auto_df.drop(['crash', 'crash_cost'], axis = 1)
+x_train_lin, x_test_lin, y_train_lin, y_test_lin = train_test_split(features_lin, crash_cost, test_size = 0.2, random_state = 10)
 
 
 # ## Feature Selection
@@ -188,7 +194,7 @@ rfecv_log.fit(x_train_log, y_train_log)
 # In[ ]:
 
 
-feature_importance_log = list(zip(features, rfecv_log.support_))
+feature_importance_log = list(zip(features_log, rfecv_log.support_))
 new_features_log = []
 for key,value in enumerate(feature_importance_log):
     if(value[1]) == True:
@@ -203,14 +209,14 @@ for key,value in enumerate(feature_importance_log):
 
 
 linreg_model = LinearRegression()
-rfecv_lin = RFECV(estimator=linreg_model, step=1, scoring='r2')
+rfecv_lin = RFECV(estimator=linreg_model, step=1, min_features_to_select = 1, scoring='r2')
 rfecv_lin.fit(x_train_lin, y_train_lin)
 
 
 # In[ ]:
 
 
-feature_importance_lin = list(zip(features, rfecv_lin.support_))
+feature_importance_lin = list(zip(features_lin, rfecv_lin.support_))
 new_features_lin = []
 for key,value in enumerate(feature_importance_lin):
     if(value[1]) == True:
@@ -221,7 +227,7 @@ for key,value in enumerate(feature_importance_lin):
 
 # ## Final Train and Test Datasets after Feature Selection
 # 
-# Here, we create our final training and test datasets that will be used for our modeling process. After reviewing the structure of each dataset for both of our models, we notice that our recursive feature elimination process removed 7 features for our logistic regression model data, giving us 16 features for this model. However, this process did not remove any features for our simple linear regrssion model data, leaving us with all 23 features for this model. Now, with our cleaned final datasets, we are ready to move onto the modeling phase of our study.
+# Here, we create our final training and test datasets that will be used for our modeling process. After reviewing the structure of each dataset for both of our models, we notice that our recursive feature elimination process removed 7 features for our logistic regression model data, giving us 16 features for this model. However, this process did not remove any features for our simple linear regression model data, leaving us with all 23 features for this model. Now, with our cleaned final datasets, we are ready to move onto the modeling phase of our study.
 
 # In[ ]:
 
